@@ -52,8 +52,9 @@
                   "<h3>" + locale.link.insert + "</h3>" +
                 "</div>" +
                 "<div class='modal-body'>" +
-                  "<input value='http://' class='bootstrap-wysihtml5-insert-link-url input-xlarge'>" +
-                  "<label class='checkbox'> <input type='checkbox' class='bootstrap-wysihtml5-insert-link-target' checked>" + locale.link.target + "</label>" +
+                "<div class='control-group'><label class='control-label'>Title (optional)</label><div class='controls'><input class='bootstrap-wysihtml5-insert-link-title input-xlarge'></div></div>" +
+                "<div class='control-group'><label class='control-label'>URL</label><div class='controls'><input value='http://' class='bootstrap-wysihtml5-insert-link-url input-xlarge'></div></div>" +
+                "<label class='checkbox'> <input type='checkbox' class='bootstrap-wysihtml5-insert-link-target' checked>" + locale.link.target + "</label>" +
                 "</div>" +
                 "<div class='modal-footer'>" +
                   "<a href='#' class='btn' data-dismiss='modal'>" + locale.link.cancel + "</a>" +
@@ -285,15 +286,19 @@
         initInsertLink: function(toolbar) {
             var self = this;
             var insertLinkModal = toolbar.find('.bootstrap-wysihtml5-insert-link-modal');
+            var titleInput = insertLinkModal.find('.bootstrap-wysihtml5-insert-link-title');
             var urlInput = insertLinkModal.find('.bootstrap-wysihtml5-insert-link-url');
             var targetInput = insertLinkModal.find('.bootstrap-wysihtml5-insert-link-target');
             var insertButton = insertLinkModal.find('a.btn-primary');
+            var initialTitle = titleInput.val();
             var initialValue = urlInput.val();
             var caretBookmark;
 
             var insertLink = function() {
                 var url = urlInput.val();
                 urlInput.val(initialValue);
+                var title = titleInput.val();
+                titleInput.val(initialTitle);
                 self.editor.currentView.element.focus();
                 if (caretBookmark) {
                   self.editor.composer.selection.setBookmark(caretBookmark);
@@ -303,6 +308,7 @@
                 var newWindow = targetInput.prop("checked");
                 self.editor.composer.commands.exec("createLink", {
                     'href' : url,
+                    'text' : title,
                     'target' : (newWindow ? '_blank' : '_self'),
                     'rel' : (newWindow ? 'nofollow' : '')
                 });
